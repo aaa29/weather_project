@@ -1,19 +1,32 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, toRaw } from 'vue'
+import { AlgerianMap } from './assets/svgs/map'
+
+const regions = Object.assign({}, ...AlgerianMap.map((region) => ({ [region.id]: toRaw(ref(null)) })))
 
 const country = ref(null)
 
-function action() {
-    console.log('hhhhh', 'active' in country.value.classList, country.value.classList.contains('active'))
-    // add active and remove inactive from classList and visa versa
-    if (country.value.classList.contains('active')) {
-        country.value.classList.remove('active')
-        country.value.classList.add('inactive')
-    } else {
-        country.value.classList.remove('inactive')
-        country.value.classList.add('active')
-        console.log('jjj', country.value.classList)
-    }
+console.log('amineee', country)
+console.log(regions)
+console.log('lenght', regions.lenght)
+
+function action(id) {
+    Object.entries(regions).forEach((r) => {
+        console.log(r)
+        let region = r[1].value[0]
+        if (r[0] !== id) {
+            console.log(r[id], region.classList)
+            if (region.classList.contains('active')) {
+                region.classList.remove('active')
+                region.classList.add('inactive')
+                console.log('deep shit')
+            }
+        } else if (region.classList.contains('inactive')) {
+            region.classList.remove('inactive')
+            region.classList.add('active')
+            console.log(r[id], region.classList)
+        }
+    })
 }
 </script>
 
@@ -21,11 +34,11 @@ function action() {
     <main>
         <Map />
     </main>
-    <svg class="map" xmlns="http://www.w3.org/2000/svg" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1500 1500" width="1000" height="1000" preserveAspectRatio="xMidYMid slice">
+    <!-- <svg class="map" xmlns="http://www.w3.org/2000/svg" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1500 1500" width="1000" height="1000" preserveAspectRatio="xMidYMid slice">
         <g>
             <a href="#" @click="action">
                 <path
-                    ref="country"
+                    ref="regions[id]"
                     id="DZ-01"
                     title="Adrar"
                     class="land inactive"
@@ -449,6 +462,14 @@ function action() {
                     class="land inactive"
                     d="M359.1,260.02L360.39,260.47L360.58,260.26L361.81,260.67L362.87,260.58L362.88,260.32L364.53,259.56L364.85,259.08L364.84,259.83L365.87,259.16L366.84,259.08L367.52,260.02L367.28,260.38L367.64,260.55L367.9,261.55L367.72,262.55L368.21,262.29L368.7,262.58L368.26,262.88L368.49,263.08L368.33,263.7L368.61,263.32L368.76,263.89L367.2,265.68L368.13,265.39L367.92,266.49L368.13,266.42L368.39,266.92L368.73,266.62L369.12,267.52L368.93,267.63L369.1,269.03L370.24,269.04L370.97,268.74L370.86,268.2L371.5,267.77L372.34,267.8L371.71,268.25L372.35,268.67L372.8,268.32L373.79,269.95L373.8,270.47L374.96,270.68L375.07,271.1L376.02,271.38L376.66,272.26L378.16,272.31L378.99,271.85L379.06,271.56L381.13,271.42L381.84,270.76L382.3,271.11L382.42,272.48L382.79,272.94L383.53,273.22L383.95,273.93L384,274.78L385.14,275.96L384.97,276.34L385.82,276.75L385.82,276.75L385.32,277.1L385.88,277.02L385.86,277.5L386.22,277.38L386.53,277.84L386.81,277.6L387.24,277.98L386.17,278.94L385.59,280.14L385.19,280.42L383.91,280.16L383.6,278.82L383.3,278.53L382.45,279.18L382.25,278.8L381.97,278.89L381.87,279.42L381.49,279.53L381.5,280L381.87,280.2L381.27,280.85L381.36,282.14L381.87,282.54L381.39,282.8L381.47,283.69L380.69,284.5L380.69,284.5L379.55,284.7L379.23,285.61L378.05,285.55L377.03,287.35L375.56,287.61L375.54,286.98L374.16,287.37L373.28,286.99L373.26,288.3L372.99,288.65L371.51,288.46L371.31,290.04L370.3,289.83L369.1,290.23L369.02,291.32L367.92,291.32L367.78,291.57L368.01,291.98L367.3,292.04L367.41,292.63L366.19,294.63L365.99,295.49L365.07,295.59L365.15,295.34L364.85,295.52L364.65,295.26L364.35,295.83L364.35,295.83L362.42,295.52L361.4,295.15L361.28,294.88L360.63,295.27L360.08,294.07L359.45,294.16L359.09,293.89L358.36,294.46L357.42,293.91L356.95,294.25L356.45,293.21L355.27,292.6L354.44,292.66L353.6,292.29L353.15,292.7L351.83,292.71L350.88,290.88L349.63,290.27L349.47,289.45L348.75,290.35L348.58,290.12L347.92,290.58L347.68,289.63L347.18,289.64L347,290.27L346.51,290.54L346.1,290.35L345.72,290.82L344.56,290.56L344.42,289.62L343.53,289.51L343.96,287.67L342.89,286.41L342.9,285.94L342.18,285.54L342.53,284.97L342.27,284L341.22,283.66L341.22,283.66L342.08,282.27L341.9,282.06L342.55,281.86L343.47,281.98L343.49,281.64L342.84,281.08L343.33,281.13L344.35,279.84L344.7,279.96L345.36,279.56L345.36,279.08L346.26,278.84L347.06,279.46L347.53,279.51L347.6,279.07L348.16,278.93L348.16,278.93L347.99,278.41L348.2,278.24L348.2,278.24L348.31,278.49L348.65,278.26L349.25,277.21L349.92,276.88L350.15,276.25L350.25,275.74L349.5,275.21L350.53,274.31L350.19,273.69L350.56,273.38L349.33,273.46L349.07,272.85L349.31,271.95L348.75,272.06L350.1,270.69L350.28,270.19L350.55,270.64L350.69,270.23L351.48,270.64L351.56,271.04L352.42,270.4L352.51,270.76L352.19,271.02L352.53,271.21L353.53,270.1L354.02,270.6L354.72,270.51L356.53,269.52L356.99,269.95L357.41,269.9L357.57,269.34L357.36,268.58L356.74,268.31L356.95,267.6L357.47,267.58L357.89,267.02L356.7,266.74L356.59,266.26L356.06,265.87L356.11,265L355.51,264.57L355.82,264.49L355.65,264.15L356.29,262.88L357.74,262.59L357.73,261.53L358.31,261.21L358.34,260.93L358.97,260.83z"
                 />
+            </a>
+        </g>
+    </svg> -->
+
+    <svg class="map" xmlns="http://www.w3.org/2000/svg" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1500 1500" width="1000" height="1000" preserveAspectRatio="xMidYMid slice">
+        <g>
+            <a v-for="region in AlgerianMap" :key="region.id" href="#" @click="action(region.id)">
+                <path :ref="toRaw(regions[region.id])" :id="region.id" :title="region.title" :d="region.d" class="land inactive" />
             </a>
         </g>
     </svg>

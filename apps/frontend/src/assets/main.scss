@@ -1,22 +1,32 @@
 body {
-    margin : 0;
-    padding : 0;
+    margin: 0;
+    padding: 0;
     background-color: var(--light-grey);
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
 }
 
 #app {
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
     isolation: isolate;
-    height: 100%;  
+    height: 100%;
 }
-:root{
-    --light-grey : #fafafa;
-    --grey : #e0e0e0;
-    --dark-grey : #bdbdbd;
-    --darker-grey : #9e9e9e;
-    --primary : #3f51b5;  
-    --light-primary : #7986cb;
-    --lighter-primary : #b3e5fc;
-    --darker-primary : #303f9f;
+:root {
+    --light-grey: #fafafa;
+    --grey: #e0e0e0;
+    --dark-grey: #bdbdbd;
+    --darker-grey: hsl(0, 0%, 62%);
+    --darkest-grey: hsl(0, 0%, 20%);
+    --primary: #3f51b5;
+    --light-primary: #7986cb;
+    --lighter-primary: #b3e5fc;
+    --darker-primary: #303f9f;
+    --bg-main: #f0fafe;
 }

@@ -1,40 +1,56 @@
 <script setup>
-import { defineProps, toRaw, ref } from 'vue'
+import { toRaw, ref } from 'vue'
 import { AlgerianMap } from '../assets/svgs/map'
 import { getCountry } from '../assets/svgs/world3'
 import { useCountry } from '../../composables'
 import { useMap } from '../store'
 import { storeToRefs } from 'pinia'
 
-const { store } = useMap()
+const props = defineProps({
+    country: {
+        type: Object,
+        default: null,
+    },
+})
+
+const store = useMap()
 const { currentName, currentCountry } = storeToRefs(store)
 
-const regions = Object.assign({}, ...AlgerianMap.map((region) => ({ [region.id]: toRaw(ref(null)) })))
+store.selectCountry(toRaw(props.country), toRaw('Algeria'))
 
-const country = ref(null)
-
-function action(id) {
-    Object.entries(regions).forEach((r) => {
-        let region = r[1].value[0]
-        if (r[0] !== id) {
-            if (region.classList.contains('active')) {
-                region.classList.remove('active')
-                region.classList.add('inactive')
-            }
-        } else if (region.classList.contains('inactive')) {
-            region.classList.remove('inactive')
-            region.classList.add('active')
-        }
-    })
+function change(m, val) {
+    if (val > 2000) {
+        return m / 3
+    } else if (val > 1000) {
+        return m / 2
+    } else return m
 }
+
+const regions = Object.assign({}, ...props.country.path.map((region) => ({ [region.id]: toRaw(ref(null)) })))
+
+// const country = ref(null)
+
+// function action(id) {
+//     Object.entries(regions).forEach((r) => {
+//         let region = r[1].value[0]
+//         if (r[0] !== id) {
+//             if (region.classList.contains('active')) {
+//                 region.classList.remove('active')
+//                 region.classList.add('inactive')
+//             }
+//         } else if (region.classList.contains('inactive')) {
+//             region.classList.remove('inactive')
+//             region.classList.add('active')
+//         }
+//     })
+// }
 </script>
 
-<template :key="currentName">
-    <h2 v-if="currentName!==null" >hhhhhh {{ currentName }}</h2>
-    <div>
-        <svg class="map" xmlns="http://www.w3.org/2000/svg" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1500 1500" width="1000" height="1000" preserveAspectRatio="xMidYMid slice">
+<template>
+    <div class="container">
+        <svg class="map" :viewBox="currentCountry.viewbox" :width="change(currentCountry.width, currentCountry.height)" :height="auto">
             <g>
-                <a v-for="region in AlgerianMap" :key="region.id" href="#" @click="action(region.id)">
+                <a v-for="region in currentCountry.path" :key="region.id" href="#" @click="action(region.id)">
                     <path :ref="toRaw(regions[region.id])" :id="region.id" :title="region.title" :d="region.d" class="land inactive" />
                 </a>
             </g>
@@ -43,10 +59,16 @@ function action(id) {
 </template>
 
 <style lang="scss" scoped>
-.map {
-    position: absolute;
-    top: 10vh;
-    left: 35%;
+.container {
+    width: 100%;
+    position: relative;
+    background-size: contain;
+}
+
+.container > .map {
+    position: abolute;
+    top: 0;
+    left: 50em;
 }
 .land {
     fill-opacity: 1;

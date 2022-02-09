@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, toRaw, ref } from 'vue'
+import { toRaw, ref } from 'vue'
 import { useCountry, useCountries } from '../../composables'
 import { useMap } from '../store'
 import { storeToRefs } from 'pinia'
@@ -14,12 +14,11 @@ const props = defineProps({
     },
 })
 
-console.log(props.countries)
+
 
 function set_current_country(name) {
     let country = props.countries[name]
     store.selectCountry(toRaw(country), toRaw(name))
-    console.log('hhhh ', store.currentName)
 }
 </script>
 
@@ -56,8 +55,14 @@ div > ul > li {
     border-radius: 5px;
     cursor: pointer;
     &:hover {
-        background-color: var(--darkest-grey);
+        background-color: var(--darker-primary);
         color: white;
+        box-shadow : 0 0 2.5rem var(--darker-primary);
+    }
+    &:active {
+        background-color: var(--darker-primary);
+        color: white;
+        box-shadow : 0 0 2.5rem var(--darker-primary);
     }
 }
 

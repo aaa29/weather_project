@@ -20,7 +20,6 @@ importers:
     specifiers:
       '@vitejs/plugin-vue': ^2.0.0
       pinia: ^2.0.11
-      prettier: 2.5.1
       sass: ^1.49.7
       vite: ^2.7.2
       vue: ^3.2.25
@@ -33,7 +32,6 @@ importers:
       vue-router: 4.0.12_vue@3.2.30
     devDependencies:
       '@vitejs/plugin-vue': 2.2.0_vite@2.8.0+vue@3.2.30
-      prettier: 2.5.1
       sass: 1.49.7
       vite: 2.8.0_sass@1.49.7
 
@@ -107,8 +105,8 @@ packages:
       '@vue/shared': 3.2.30
     dev: false
 
-  /@vue/devtools-api/6.0.2:
-    resolution: {integrity: sha512-1W8ylfudTFepNgpgY1Dp29iVPlseIy+0+4xXoMkxKmdnxWx8vm8dNgz4F83zML46hHb9aP382JURFfqLuJcWYQ==}
+  /@vue/devtools-api/6.0.3:
+    resolution: {integrity: sha512-KSVo6rqmaVCdzMBE3ZLz7AFNnWrqAwk7BJ3uYuzFi8kQqwuaGWY6QH8ToVw7QlqFrqkUbMq2kyvzRURrQZN0Iw==}
     dev: false
 
   /@vue/reactivity-transform/3.2.30:
@@ -803,7 +801,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@vue/devtools-api': 6.0.2
+      '@vue/devtools-api': 6.0.3
       vue: 3.2.30
       vue-demi: 0.12.1_vue@3.2.30
     dev: false
@@ -1115,7 +1113,7 @@ packages:
     peerDependencies:
       vue: ^3.0.0
     dependencies:
-      '@vue/devtools-api': 6.0.2
+      '@vue/devtools-api': 6.0.3
       vue: 3.2.30
     dev: false
 

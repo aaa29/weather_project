@@ -2,7 +2,7 @@ import { useQuery } from 'vue-query'
 
 export function useCountries() {
     const { isLoading, data: countries } = useQuery('countires/', async () => {
-        const response = await fetch('http://localhost:8000/countries')
+        const response = await fetch('http://localhost:8001/countries')
         return response.json()
     })
 
@@ -10,10 +10,10 @@ export function useCountries() {
 }
 
 export function useCountry(name) {
-    var { isLoading, data: country } = useQuery('country/'+ name, async () => {
-        const response = await fetch('http://localhost:8000/country/'+name)
+    var { isLoading, data: country } = useQuery('country/' + name, async () => {
+        const response = await fetch('http://localhost:8001/country/' + name)
         return response.json()
     })
 
-    return { isLoading, country}
+    return { isLoading, country }
 }

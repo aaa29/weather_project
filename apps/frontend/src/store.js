@@ -9,7 +9,7 @@ export const useMap = defineStore('map', {
 
     actions : {        
         selectCountry(country, name){
-            this.currentCountry = JSON.stringify(country)
+            this.currentCountry = country
             this.currentName = name
         }
     }

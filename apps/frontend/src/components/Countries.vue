@@ -14,18 +14,32 @@ const props = defineProps({
     },
 })
 
-
+const countries_ref = Object.assign({}, ...Object.keys(toRaw(props.countries)).map((c) => ({ [c]: toRaw(ref(null)) })))
+console.log('peee', countries_ref)
 
 function set_current_country(name) {
     let country = props.countries[name]
     store.selectCountry(toRaw(country), toRaw(name))
+
+    console.log('shitt', countries_ref)
+    Object.entries(countries_ref).forEach((c) => {
+        let country = c[1].value[0]
+        if (c[0] !== name) {
+            if (country.classList.contains('active')) {
+                country.classList.remove('active')
+            }
+        } else {
+            country.classList.add('active')
+            console.log(country.classList)
+        }
+    })
 }
 </script>
 
 <template>
     <div>
         <ul>
-            <li v-for="name in Object.keys(countries)" :key="name">
+            <li  class="active" v-for="name in Object.keys(countries)" :ref="toRaw(countries_ref[name])" :key="countries_ref[name]">
                 <a href="#" @click="set_current_country(name)">
                     {{ name }}
                 </a>
@@ -57,13 +71,14 @@ div > ul > li {
     &:hover {
         background-color: var(--darker-primary);
         color: white;
-        box-shadow : 0 0 2.5rem var(--darker-primary);
+        box-shadow: 0 0 2.5rem var(--darker-primary);
     }
-    &:active {
-        background-color: var(--darker-primary);
-        color: white;
-        box-shadow : 0 0 2.5rem var(--darker-primary);
-    }
+}
+
+div > ul > li .active {
+    background-color: var(--darker-primary);
+    color: white;
+    box-shadow: 0 0 2.5rem var(--darker-primary);
 }
 
 div > ul > li > a {

@@ -19,11 +19,12 @@ const { currentName, currentCountry } = storeToRefs(store)
 store.selectCountry(toRaw(props.country), toRaw('Algeria'))
 
 function change(m, val) {
+    console.log(val, '  ', m)
     if (val > 2000) {
-        return m / 3
+        return m / 3.1
     } else if (val > 1000) {
         return m / 2
-    } else return m
+    } else return m / 1.5
 }
 
 const regions = Object.assign({}, ...props.country.path.map((region) => ({ [region.id]: toRaw(ref(null)) })))
@@ -55,6 +56,10 @@ const regions = Object.assign({}, ...props.country.path.map((region) => ({ [regi
                 </a>
             </g>
         </svg>
+
+        <div class="info">
+            div*4
+        </div>
     </div>
 </template>
 
@@ -63,12 +68,15 @@ const regions = Object.assign({}, ...props.country.path.map((region) => ({ [regi
     width: 100%;
     position: relative;
     background-size: contain;
+    display : flex;
+    align-items: center;
 }
 
 .container > .map {
     position: abolute;
     top: 0;
-    left: 50em;
+    left: 20em;
+    padding : 0 10em;
 }
 .land {
     fill-opacity: 1;
@@ -89,5 +97,15 @@ const regions = Object.assign({}, ...props.country.path.map((region) => ({ [regi
 .land:hover {
     fill: var(--primary);
     filter: drop-shadow(0 0 2rem var(--darker-primary));
+}
+
+
+
+.info {
+    height : 50vh;
+    width : 45%;
+    border : .5 rem var(--light-grey);
+    border-radius : 5px;
+    box-shadow: 0 0 2.5rem var(--darker-primary);
 }
 </style>

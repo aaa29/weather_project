@@ -21,6 +21,8 @@ const { isLoading, countries } = useCountries()
 
 <style lang="scss" scoped>
 .container {
-    width: 60%;
+    width: 100%;
+    display: flex;
+    
 }
 </style>

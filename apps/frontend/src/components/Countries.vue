@@ -30,7 +30,7 @@ function set_current_country(name) {
             }
         } else {
             country.classList.add('active')
-            console.log(country.classList)
+            console.log(c[0], country.classList)
         }
     })
 }
@@ -39,8 +39,8 @@ function set_current_country(name) {
 <template>
     <div>
         <ul>
-            <li  class="active" v-for="name in Object.keys(countries)" :ref="toRaw(countries_ref[name])" :key="countries_ref[name]">
-                <a href="#" @click="set_current_country(name)">
+            <li  v-for="name in Object.keys(countries)"  :key="countries_ref[name]">
+                <a :ref="toRaw(countries_ref[name])" href="#" @click="set_current_country(name)">
                     {{ name }}
                 </a>
             </li>
@@ -62,11 +62,24 @@ div > ul {
     gap: 0.2em;
 }
 div > ul > li {
-    color: var(--darkest-grey);
+    display: flex;
+    justify-content: center;
     width: 80%;
-    padding: 0.5rem;
+    border-radius: 5px;
+}
+
+
+div > ul > li > a {
     border: 0.1rem solid var(--darker-grey);
     border-radius: 5px;
+    color: inherit;
+    font-weight: 400;
+    width: 100%;
+    height: inherit;
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem;
+
     cursor: pointer;
     &:hover {
         background-color: var(--darker-primary);
@@ -75,18 +88,10 @@ div > ul > li {
     }
 }
 
-div > ul > li .active {
+div > ul > li > a.active {
     background-color: var(--darker-primary);
     color: white;
     box-shadow: 0 0 2.5rem var(--darker-primary);
 }
 
-div > ul > li > a {
-    color: inherit;
-    font-weight: 400;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-}
 </style>

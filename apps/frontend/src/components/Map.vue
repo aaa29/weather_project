@@ -1,5 +1,5 @@
 <script setup>
-import { toRaw, ref } from 'vue'
+import { toRaw, ref, reactive } from 'vue'
 import { AlgerianMap } from '../assets/svgs/map'
 import { getCountry } from '../assets/svgs/world3'
 import { useCountry } from '../../composables'
@@ -11,15 +11,22 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    covid: {
+        type: Object,
+        default: null,
+    },
 })
 
 const store = useMap()
-const { currentName, currentCountry } = storeToRefs(store)
+const { currentName, currentCountry, currentRegions, covidData } = storeToRefs(store)
 
-store.selectCountry(toRaw(props.country), toRaw('Algeria'))
+const regions = Object.values(props.country.path).map((r) => ({ [r.id]: false }))
+
+store.selectCountry(toRaw(props.country), toRaw(regions), toRaw(props.covid), 'Algeria')
+
+var change_regions = false
 
 function change(m, val) {
-    console.log(val, '  ', m)
     if (val > 2000) {
         return m / 3.1
     } else if (val > 1000) {
@@ -27,38 +34,37 @@ function change(m, val) {
     } else return m / 1.5
 }
 
-const regions = Object.assign({}, ...props.country.path.map((region) => ({ [region.id]: toRaw(ref(null)) })))
-
-// const country = ref(null)
-
-// function action(id) {
-//     Object.entries(regions).forEach((r) => {
-//         let region = r[1].value[0]
-//         if (r[0] !== id) {
-//             if (region.classList.contains('active')) {
-//                 region.classList.remove('active')
-//                 region.classList.add('inactive')
-//             }
-//         } else if (region.classList.contains('inactive')) {
-//             region.classList.remove('inactive')
-//             region.classList.add('active')
-//         }
-//     })
-// }
+function action(id) {
+    var i = 0
+    store.currentRegions.forEach((r) => {
+        let key = Object.keys(r)[0]
+        if (key === id) {
+            store.setRegion(i, key, true)
+            Object.keys(store.covidData).forEach((c) => {})
+        } else {
+            store.setRegion(i, key, false)
+        }
+        i += 1
+        change_regions = !change_regions
+    })
+}
 </script>
 
 <template>
-    <div class="container">
+    <div class="container" :key="change_regions">
         <svg class="map" :viewBox="currentCountry.viewbox" :width="change(currentCountry.width, currentCountry.height)" :height="auto">
             <g>
-                <a v-for="region in currentCountry.path" :key="region.id" href="#" @click="action(region.id)">
-                    <path :ref="toRaw(regions[region.id])" :id="region.id" :title="region.title" :d="region.d" class="land inactive" />
+                <a v-for="(region, i) in currentCountry.path" :key="i || currentRegions[i][region.id]" href="#" @click="action(region.id)">
+                    <path :id="region.id" :title="region.title" :d="region.d" class="land" :class="{ active: currentRegions[i][region.id], inactive: !currentRegions[i][region.id] }" />
+                    {{ region.id }}
                 </a>
             </g>
         </svg>
 
         <div class="info">
-            div*4
+            <h3>Covid information</h3>
+            <div>confirmed cases : {{ covidData['All']['confirmed'] }}</div>
+            <div>number of death's : {{ covidData['All']['deaths'] }}</div>
         </div>
     </div>
 </template>
@@ -68,7 +74,7 @@ const regions = Object.assign({}, ...props.country.path.map((region) => ({ [regi
     width: 100%;
     position: relative;
     background-size: contain;
-    display : flex;
+    display: flex;
     align-items: center;
 }
 
@@ -76,7 +82,7 @@ const regions = Object.assign({}, ...props.country.path.map((region) => ({ [regi
     position: abolute;
     top: 0;
     left: 20em;
-    padding : 0 10em;
+    padding: 0 10em;
 }
 .land {
     fill-opacity: 1;
@@ -99,13 +105,27 @@ const regions = Object.assign({}, ...props.country.path.map((region) => ({ [regi
     filter: drop-shadow(0 0 2rem var(--darker-primary));
 }
 
-
-
 .info {
-    height : 50vh;
-    width : 45%;
-    border : .5 rem var(--light-grey);
-    border-radius : 5px;
+    height: 50vh;
+    width: 40%;
+    border: 0.5 rem var(--light-grey);
+    border-radius: 5px;
     box-shadow: 0 0 2.5rem var(--darker-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.info > h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    padding: 0.5rem;
+}
+
+.info > div {
+    padding: 0.5rem;
+    width: 90%;
+    display: flex;
+    justify-content: center;
 }
 </style>

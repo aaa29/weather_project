@@ -1,30 +1,24 @@
 <script setup>
 import { toRaw, ref } from 'vue'
 import Countries from './components/Countries.vue'
-import { useCountry, useCountries } from '../composables'
+import { useCovid, useCountries } from '../composables'
 
-const { isLoading, countries } = useCountries()
-
-
-
-
+const { loading_countries, countries } = useCountries()
+const { loading_covid, covid_infos } = useCovid()
 
 
 </script>
 
 <template>
-
-    <div class="container" :key="isLoading">
-        
-        <aside v-if="!isLoading">
-            <Countries :countries="countries"/>
+    <div class="container" :key="loading_countries">
+    
+        <aside v-if="!(loading_countries && loading_covid)">
+            <Countries :countries="countries" :covid_infos="covid_infos" />
         </aside>
-        <main v-if="!isLoading">
+        <main v-if="!(loading_countries && loading_covid)">
             <router-view />
         </main>
-        <div v-if="isLoading">
-            Loading....
-        </div>
+        <div v-if="loading_countries || loading_covid">Loading....</div>
     </div>
 </template>
 
@@ -33,7 +27,7 @@ const { isLoading, countries } = useCountries()
     display: flex;
     align-items: center;
     height: 100vh;
-    width : 100%;
+    width: 100%;
 }
 main {
     width: 80%;
@@ -43,6 +37,4 @@ main {
     align-items: center;
     justify-content: center;
 }
-
-
 </style>

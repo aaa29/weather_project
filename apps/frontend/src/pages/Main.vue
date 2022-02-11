@@ -1,21 +1,23 @@
 <script setup>
 import Map from '../components/Map.vue'
 import { ref, toRaw } from 'vue'
-import { useCountries } from '../../composables'
+import { useCountries, useCovid } from '../../composables'
 import { useMap } from '../store'
 import { storeToRefs } from 'pinia'
 
 const store = useMap()
 const { currentCountry, currentName } = storeToRefs(store)
 
-const { isLoading, countries } = useCountries()
 
-// store.selectCountry(toRaw(countries['Algeria']), toRaw('Algeria'))
+const { loading_countries, countries } = useCountries()
+const { loading_covid, covid_infos } = useCovid()
+
+
 </script>
 
 <template>
-    <div class="container">
-        <Map :country="countries['Algeria']"/>
+    <div v-if="!(loading_countries || loading_covid)" class="container">
+        <Map :country="countries['Algeria']" :covid="covid_infos['Algeria']"/>
     </div>
 </template>
 

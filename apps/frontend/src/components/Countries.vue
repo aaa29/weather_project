@@ -12,16 +12,18 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    covid_infos: {
+        type: Object,
+        default: null,
+    },
 })
 
 const countries_ref = Object.assign({}, ...Object.keys(toRaw(props.countries)).map((c) => ({ [c]: toRaw(ref(null)) })))
-console.log('peee', countries_ref)
 
 function set_current_country(name) {
-    let country = props.countries[name]
-    store.selectCountry(toRaw(country), toRaw(name))
+    const regions = Object.values(props.countries[name].path).map((r) => ({ [r.id]: false }))
+    store.selectCountry(toRaw(props.countries[name]), toRaw(regions), toRaw(props.covid_infos[name]), name)
 
-    console.log('shitt', countries_ref)
     Object.entries(countries_ref).forEach((c) => {
         let country = c[1].value[0]
         if (c[0] !== name) {
@@ -30,7 +32,6 @@ function set_current_country(name) {
             }
         } else {
             country.classList.add('active')
-            console.log(c[0], country.classList)
         }
     })
 }
@@ -39,7 +40,7 @@ function set_current_country(name) {
 <template>
     <div>
         <ul>
-            <li  v-for="name in Object.keys(countries)"  :key="countries_ref[name]">
+            <li v-for="name in Object.keys(countries)" :key="countries_ref[name]">
                 <a :ref="toRaw(countries_ref[name])" href="#" @click="set_current_country(name)">
                     {{ name }}
                 </a>
@@ -68,7 +69,6 @@ div > ul > li {
     border-radius: 5px;
 }
 
-
 div > ul > li > a {
     border: 0.1rem solid var(--darker-grey);
     border-radius: 5px;
@@ -93,5 +93,4 @@ div > ul > li > a.active {
     color: white;
     box-shadow: 0 0 2.5rem var(--darker-primary);
 }
-
 </style>

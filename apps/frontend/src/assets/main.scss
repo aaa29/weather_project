@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Cantarell&display=swap');
+
+
 body {
     margin: 0;
     padding: 0;
@@ -7,15 +10,22 @@ body {
 
 li {
     list-style: none;
+    font-family: 'Cantarell', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 a {
     text-decoration: none;
+    font-family: 'Cantarell', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 #app {
-    font-family: 'Roboto', sans-serif;
-    font-size: 16px;
+    font-family: 'Cantarell', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
     isolation: isolate;
     height: 100%;
 }

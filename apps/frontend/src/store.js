@@ -5,6 +5,7 @@ export const useMap = defineStore('map', {
         currentCountry: null,
         currentRegions: null,
         covidData: null,
+        currentRegion : null,
         currentName: null,
         countries: new Set(),
     }),
@@ -18,6 +19,9 @@ export const useMap = defineStore('map', {
         },
         setRegion(i, id, val) {
             this.currentRegions[i][id] = val
+        },
+        setCurrentRegion(region) {
+            this.currentRegion = region
         }
     },
 })

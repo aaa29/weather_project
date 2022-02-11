@@ -18,13 +18,15 @@ const props = defineProps({
 })
 
 const store = useMap()
-const { currentName, currentCountry, currentRegions, covidData } = storeToRefs(store)
+const { currentName, currentCountry, currentRegions, covidData, currentRegion } = storeToRefs(store)
 
 const regions = Object.values(props.country.path).map((r) => ({ [r.id]: false }))
 
+var selected_region = null
+
 store.selectCountry(toRaw(props.country), toRaw(regions), toRaw(props.covid), 'Algeria')
 
-var change_regions = false
+
 
 function change(m, val) {
     if (val > 2000) {
@@ -36,16 +38,20 @@ function change(m, val) {
 
 function action(id) {
     var i = 0
+    console.log(toRaw(store.covidData))
     store.currentRegions.forEach((r) => {
         let key = Object.keys(r)[0]
         if (key === id) {
             store.setRegion(i, key, true)
-            Object.keys(store.covidData).forEach((c) => {})
+            Object.keys(store.covidData).forEach((c) => {
+                if (store.currentCountry.path[i].name == c) {
+                    store.setCurrentRegion(c)
+                }
+            })
         } else {
             store.setRegion(i, key, false)
         }
         i += 1
-        change_regions = !change_regions
     })
 }
 </script>
@@ -62,9 +68,16 @@ function action(id) {
         </svg>
 
         <div class="info">
-            <h3>Covid information</h3>
+            <h3>Covid-19 information</h3>
             <div>confirmed cases : {{ covidData['All']['confirmed'] }}</div>
             <div>number of death's : {{ covidData['All']['deaths'] }}</div>
+            <div v-if="covidData['All']['updated']">Latest update {{ covidData['All']['updated'] }}</div>
+            <div v-if="currentRegion" :key="currentRegion" class="region">
+                <h3>Covid-19 in {{ currentRegion }}</h3>
+                <div>Confirmed cases {{ covidData[currentRegion]['confirmed'] }}</div>
+                <div>Confirmed cases {{ covidData[currentRegion]['deaths'] }}</div>
+                <div>Latest update {{ covidData[currentRegion]['updated'] }}</div>
+            </div>
         </div>
     </div>
 </template>
@@ -106,7 +119,7 @@ function action(id) {
 }
 
 .info {
-    height: 50vh;
+    height: auto;
     width: 40%;
     border: 0.5 rem var(--light-grey);
     border-radius: 5px;
@@ -124,8 +137,31 @@ function action(id) {
 
 .info > div {
     padding: 0.5rem;
-    width: 90%;
+    width: 100%;
     display: flex;
+    justify-content: center;
+}
+
+.region {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.region > div {
+    width : 100%;
+    padding : .5rem;
+    display : flex;
+    justify-content : center;
+}
+
+.info > h3, .region > h3 {
+    width : 100%;
+    font-size: 1.5rem;
+    font-weight: 400;
+    padding: 0.1rem;
+    background : var(--primary);
+    color : #ffffff;
+    display : flex;
     justify-content: center;
 }
 </style>

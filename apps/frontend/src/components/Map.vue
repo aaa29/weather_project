@@ -127,6 +127,7 @@ function action(id) {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-right : 2rem;
 }
 
 .info > h2 {

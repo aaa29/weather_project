@@ -1,31 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Cantarell&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Cantarell&family=Source+Code+Pro&display=swap');
 
 body {
     margin: 0;
     padding: 0;
     background-color: var(--light-grey);
-    width : 100%;
+    width: 100%;
 }
 
+ul {
+    list-style-type: disc;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 0px;
+}
 li {
     list-style: none;
-    font-family: 'Cantarell', sans-serif;
     font-size: 18px;
     font-weight: 600;
 }
 
 a {
     text-decoration: none;
-    font-family: 'Cantarell', sans-serif;
     font-size: 18px;
     font-weight: 600;
 }
 
 #app {
-    font-family: 'Cantarell', sans-serif;
-    font-size: 18px;
-    font-weight: 600;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 16px;
+    font-weight: 800;
     isolation: isolate;
     height: 100%;
 }

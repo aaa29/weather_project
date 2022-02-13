@@ -26,6 +26,18 @@ export const useMap = defineStore('map', {
     },
 })
 
+export const useDom = defineStore('dom', {
+    state: () => ({
+        hideContent: false,
+    }),
+
+    actions: {
+        switchHideContent() {
+            this.hideContent = !this.hideContent
+        },
+    }
+})
+
 if (import.meta.hot) {
     import.meta.hot.accept(acceptHMRUpdate(useMap, import.meta.hot))
 }

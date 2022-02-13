@@ -1,11 +1,14 @@
 <script setup>
 import { toRaw, ref } from 'vue'
 import { useCountry, useCountries } from '../../composables'
-import { useMap } from '../store'
+import { useMap, useDom } from '../store'
 import { storeToRefs } from 'pinia'
 
 const store = useMap()
 const { currentCountry, currentName } = storeToRefs(store)
+
+const storeDom = useDom()
+const { hideContent } = storeToRefs(storeDom)
 
 const props = defineProps({
     countries: {
@@ -25,14 +28,31 @@ const scroll_body = ref(null)
 function search() {
     console.log('search', search_ref.value)
     if (search_ref.value) {
-        let country = Object.keys(countries_ref).find((c) => c.toLowerCase().includes(search_ref.value.toLowerCase()))
-        console.log('peeee', country)
-        if (country) {
+        let name = Object.keys(countries_ref).find((c) => c.toLowerCase().includes(search_ref.value.toLowerCase()))
+        console.log('peeee', name)
+        if (name) {
             // scroll to the search value
-            console.log(scroll_body.value)
-            scroll_body.value.scrollTop = countries_ref[country].value[0].offsetTop - scroll_body.value.offsetTop
+            let scroll_value = countries_ref[name].value[0].offsetTop - scroll_body.value.offsetTop
+            scroll_body.value.scrollTo({
+                top: scroll_value,
+                behavior: 'smooth',
+            })
+            // color the selected button
+            // let c = countries_ref[country].value[0]
         }
     }
+}
+
+function hide_content() {
+    storeDom.switchHideContent()
+    console.log('hide_content', storeDom.hideContent)
+}
+
+function show_content(name){
+    if (!storeDom.hideContent) {
+        return name
+    }
+    return null
 }
 
 function set_current_country(name) {
@@ -54,15 +74,20 @@ function set_current_country(name) {
 </script>
 
 <template>
-    <div class="container_countries">
-        <div class="search">
-            <input v-model="search_ref" type="text" @keyup.enter="search" />
+    <div class="container_countries" >
+        <div class="search" :class="{ with_content: hideContent }">
+            <input v-model="search_ref" type="text" @keyup.enter="search" :class="{ hide_content: hideContent }" />
+            <button class="menu-icon-btn" data-menu-icon-btn @click="hide_content">
+                <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" class="menu-icon">
+                    <g><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></g>
+                </svg>
+            </button>
         </div>
-        <div ref="scroll_body" class="countries" id="style-2">
+        <div ref="scroll_body" class="countries" :class="{ hide_content: hideContent, show_content: !hideContent }" id="style-2">
             <ul>
-                <li v-for="name in Object.keys(countries)" :key="countries_ref[name]">
+                <li v-for="name in Object.keys(countries)" :key="countries_ref[name]" :class="{ hide_ul: hideContent }">
                     <a :ref="toRaw(countries_ref[name])" href="#" @click="set_current_country(name)" :active="false">
-                        {{ name }}
+                        {{ show_content(name) }}
                     </a>
                 </li>
             </ul>
@@ -72,35 +97,76 @@ function set_current_country(name) {
 
 <style lang="scss" scoped>
 .container_countries {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: flex-end;
+    height: 100vh;
+    width: 90mm;
+    justify-content: flex-start;
     margin-top: 2em;
 }
 
+
+
 .search {
-    width: 80%;
+    
+    
+    
+}
+
+.with_content {
     display: flex;
     justify-content: center;
+    width: 80%;
 }
+
 .search > input {
     margin-left: 1.5em;
     width: 80%;
     padding: 0.7em;
     font-size: 1em;
+    // hide border and add box shadow
+    border: none;
+    box-shadow: 0 0 2em 1px #ccc;
+    border-radius: 0.5em 0 0 0.5em;
+}
+
+.menu-icon-btn {
+    border: none;
+    padding: 0;
+    border-radius: 0 0.5em 0.5em 0;
+}
+
+.menu-icon {
+    width: 25px;
+    height: 25px;
+    fill: var(--medium-gray);
+    cursor: pointer;
+}
+
+.menu-icon:hover {
+    fill: var(--dark-gray);
 }
 
 .countries {
     height: 90vh;
-    overflow-y: auto;
     width: 80%;
+    padding: 0 0.6em;
+    margin-top: 1.5em;
+    transition: width var(--animation-duration) var(--animation-timing-curve);
+}
+
+.show_content {
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 0.6em;
-    margin-top: 1.5em;
+    transition: width var(--animation-duration) var(--animation-timing-curve);
 }
+
+.hide_content { 
+    width : 0;
+    overflow-y : none;
+    transition: width var(--animation-duration) var(--animation-timing-curve);
+}
+
 
 .countries > ul {
     display: flex;
@@ -108,6 +174,10 @@ function set_current_country(name) {
     align-items: center;
     width: 90%;
     gap: 0.6em;
+}
+
+.hide_ul {
+    visibility: hidden;
 }
 .countries > ul > li {
     display: flex;
@@ -129,6 +199,7 @@ function set_current_country(name) {
     justify-content: center;
     padding: 0.5rem;
     box-shadow: 0 0 0.5rem var(--dark-grey);
+    width : 0px;
 
     cursor: pointer;
     &:hover {

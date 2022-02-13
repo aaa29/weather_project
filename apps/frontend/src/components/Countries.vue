@@ -48,7 +48,7 @@ function hide_content() {
     console.log('hide_content', storeDom.hideContent)
 }
 
-function show_content(name){
+function show_content(name) {
     if (!storeDom.hideContent) {
         return name
     }
@@ -74,20 +74,20 @@ function set_current_country(name) {
 </script>
 
 <template>
-    <div class="container_countries" >
-        <div class="search" :class="{ with_content: hideContent }">
-            <input v-model="search_ref" type="text" @keyup.enter="search" :class="{ hide_content: hideContent }" />
+    <div class="container_countries">
+        <div class="search" :class="{ hide_search: hideContent, show_search : !hideContent }">
+            <input v-model="search_ref" type="text" @keyup.enter="search" :class="{ show_input : !hideContent}"/>
             <button class="menu-icon-btn" data-menu-icon-btn @click="hide_content">
                 <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" class="menu-icon">
                     <g><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></g>
                 </svg>
             </button>
         </div>
-        <div ref="scroll_body" class="countries" :class="{ hide_content: hideContent, show_content: !hideContent }" id="style-2">
+        <div ref="scroll_body" class="countries" :class="{ hide_countries: hideContent, show_countries: !hideContent }" id="style-2">
             <ul>
-                <li v-for="name in Object.keys(countries)" :key="countries_ref[name]" :class="{ hide_ul: hideContent }">
-                    <a :ref="toRaw(countries_ref[name])" href="#" @click="set_current_country(name)" :active="false">
-                        {{ show_content(name) }}
+                <li v-for="name in Object.keys(countries)" :key="countries_ref[name]">
+                    <a :ref="toRaw(countries_ref[name])" href="#" @click="set_current_country(name)">
+                        {{ name }}
                     </a>
                 </li>
             </ul>
@@ -98,34 +98,40 @@ function set_current_country(name) {
 <style lang="scss" scoped>
 .container_countries {
     height: 100vh;
-    width: 90mm;
-    justify-content: flex-start;
+    width: 80mm;
+    justify-content: flex-end;
     margin-top: 2em;
 }
 
-
-
 .search {
-    
-    
-    
-}
-
-.with_content {
+    transition: width var(--animation-duration) var(--animation-timing-curve);
     display: flex;
     justify-content: center;
-    width: 80%;
 }
+
+// show or hide search
+.show_search {
+    width : 100%
+}
+// 
+.hide_search {
+    width : 0;
+}
+// end
+
 
 .search > input {
     margin-left: 1.5em;
-    width: 80%;
-    padding: 0.7em;
+    width: 100%;
     font-size: 1em;
     // hide border and add box shadow
     border: none;
     box-shadow: 0 0 2em 1px #ccc;
     border-radius: 0.5em 0 0 0.5em;
+}
+
+.show_input {
+    padding: 0.7em;
 }
 
 .menu-icon-btn {
@@ -147,25 +153,26 @@ function set_current_country(name) {
 
 .countries {
     height: 90vh;
-    width: 80%;
-    padding: 0 0.6em;
-    margin-top: 1.5em;
     transition: width var(--animation-duration) var(--animation-timing-curve);
-}
-
-.show_content {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: width var(--animation-duration) var(--animation-timing-curve);
+    margin-top: 1.5em;
 }
 
-.hide_content { 
-    width : 0;
-    overflow-y : none;
-    transition: width var(--animation-duration) var(--animation-timing-curve);
+
+// show or hide countires side bar after search button is clicked
+.show_countries {
+    width: 100%;
+    padding: 0 0.6em;
+    
 }
+// 
+.hide_countries {
+    width : 0;
+}
+// end
 
 
 .countries > ul {
@@ -176,9 +183,7 @@ function set_current_country(name) {
     gap: 0.6em;
 }
 
-.hide_ul {
-    visibility: hidden;
-}
+
 .countries > ul > li {
     display: flex;
     width: 100%;
@@ -199,7 +204,7 @@ function set_current_country(name) {
     justify-content: center;
     padding: 0.5rem;
     box-shadow: 0 0 0.5rem var(--dark-grey);
-    width : 0px;
+
 
     cursor: pointer;
     &:hover {

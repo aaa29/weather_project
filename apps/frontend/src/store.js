@@ -29,12 +29,16 @@ export const useMap = defineStore('map', {
 export const useDom = defineStore('dom', {
     state: () => ({
         hideContent: false,
+        currentSearched : null,
     }),
 
     actions: {
         switchHideContent() {
             this.hideContent = !this.hideContent
         },
+        setCurrentSearched(name){
+            this.currentSearched = name;
+        }
     }
 })
 

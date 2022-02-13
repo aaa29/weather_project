@@ -8,7 +8,7 @@ const store = useMap()
 const { currentCountry, currentName } = storeToRefs(store)
 
 const storeDom = useDom()
-const { hideContent } = storeToRefs(storeDom)
+const { hideContent, currentSearched } = storeToRefs(storeDom)
 
 const props = defineProps({
     countries: {
@@ -37,8 +37,7 @@ function search() {
                 top: scroll_value,
                 behavior: 'smooth',
             })
-            // color the selected button
-            // let c = countries_ref[country].value[0]
+            storeDom.setCurrentSearched(name)
         }
     }
 }
@@ -75,8 +74,8 @@ function set_current_country(name) {
 
 <template>
     <div class="container_countries">
-        <div class="search" :class="{ hide_search: hideContent, show_search : !hideContent }">
-            <input v-model="search_ref" type="text" @keyup.enter="search" :class="{ show_input : !hideContent}"/>
+        <div class="search" :class="{ hide_search: hideContent, show_search: !hideContent }">
+            <input v-model="search_ref" type="text" @keyup.enter="search" :class="{ show_input: !hideContent }" />
             <button class="menu-icon-btn" data-menu-icon-btn @click="hide_content">
                 <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" class="menu-icon">
                     <g><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></g>
@@ -86,7 +85,7 @@ function set_current_country(name) {
         <div ref="scroll_body" class="countries" :class="{ hide_countries: hideContent, show_countries: !hideContent }" id="style-2">
             <ul>
                 <li v-for="name in Object.keys(countries)" :key="countries_ref[name]">
-                    <a :ref="toRaw(countries_ref[name])" href="#" @click="set_current_country(name)">
+                    <a :ref="toRaw(countries_ref[name])" href="#" @click="set_current_country(name)" :class="{ searched: currentSearched === name }">
                         {{ name }}
                     </a>
                 </li>
@@ -111,14 +110,13 @@ function set_current_country(name) {
 
 // show or hide search
 .show_search {
-    width : 100%
+    width: 100%;
 }
-// 
+//
 .hide_search {
-    width : 0;
+    width: 0;
 }
 // end
-
 
 .search > input {
     margin-left: 1.5em;
@@ -161,19 +159,16 @@ function set_current_country(name) {
     margin-top: 1.5em;
 }
 
-
 // show or hide countires side bar after search button is clicked
 .show_countries {
     width: 100%;
     padding: 0 0.6em;
-    
 }
-// 
+//
 .hide_countries {
-    width : 0;
+    width: 0;
 }
 // end
-
 
 .countries > ul {
     display: flex;
@@ -182,7 +177,6 @@ function set_current_country(name) {
     width: 90%;
     gap: 0.6em;
 }
-
 
 .countries > ul > li {
     display: flex;
@@ -205,13 +199,16 @@ function set_current_country(name) {
     padding: 0.5rem;
     box-shadow: 0 0 0.5rem var(--dark-grey);
 
-
     cursor: pointer;
     &:hover {
         background-color: var(--darker-primary);
         color: white;
         box-shadow: 0 0 2.5rem var(--darker-primary);
     }
+}
+
+.countries > ul > li > a.searched {
+    background-color: var(--light-primary);
 }
 
 .countries > ul > li > a.active {

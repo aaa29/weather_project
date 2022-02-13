@@ -60,12 +60,13 @@ function zoom(event) {
     console.log(event.deltaY)
 
     let scale = storeDom.currentZoom
-    scale += event.deltaY * -0.01
+    scale += event.deltaY * -0.001
 
     // Restrict scale
-    scale = Math.min(Math.max(0.5, scale), 8)
-
+    scale = Math.min(Math.max(0.001, scale), 1.5)
+    console.log('scaleee ',scale)
     storeDom.setCurrentZoom(scale)
+    console.log('scaleee22 ',storeDom.currentZoom)
 }
 
 function calc_zoom(zoom) {
@@ -75,10 +76,9 @@ function calc_zoom(zoom) {
 </script>
 
 <template>
-    {{ currentZoom }}
     <div class="container" :key="change_regions">
         <div class="svg_container" @wheel="zoom">
-            <svg class="map" :viewBox="currentCountry.viewbox" :width="change(currentCountry.width, currentCountry.height)" :height="auto" :style="{ transform: 'scale(' + calc_zoom(currentZoom) + ')' }">
+            <svg class="map" :viewBox="currentCountry.viewbox" :width="change(currentCountry.width, currentCountry.height)" :height="auto" :style="{ transform: 'scale(' + currentZoom + ')' }">
                 <g>
                     <a v-for="(region, i) in currentCountry.path" :key="i || currentRegions[i][region.id]" href="#" @click="action(region.id)">
                         <path :id="region.id" :title="region.title" :d="region.d" class="land" :class="{ active: currentRegions[i][region.id], inactive: !currentRegions[i][region.id] }" />
@@ -113,11 +113,13 @@ function calc_zoom(zoom) {
 }
 
 .container > .svg_container {
-    padding: 0 10em;
+  
     height : 90vh;
-    width : 40%;
-    display: flex
+    width : 35%;
+    display: flex;
+    margin: 0 5rem;
 }
+
 .land {
     fill-opacity: 1;
     stroke: white;
@@ -148,7 +150,7 @@ function calc_zoom(zoom) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 2rem;
+    margin: 0 5rem ;
 }
 
 .info > h2 {

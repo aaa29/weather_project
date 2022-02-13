@@ -41,7 +41,7 @@ export const useDom = defineStore('dom', {
             this.currentSearched = name;
         },
         setCurrentZoom(val){
-            this.currentZoom += val;
+            this.currentZoom = val;
         },
     }
 })

@@ -98,7 +98,7 @@ function set_current_country(name) {
 
 <style lang="scss" scoped>
 .container_countries {
-    height: 100vh;
+    height: 80%;
     width: 80mm;
     justify-content: flex-end;
     margin-top: 2em;

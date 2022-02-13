@@ -26,8 +26,10 @@ const { loading_covid, covid_infos } = useCovid()
 .container {
     display: flex;
     align-items: center;
-    height: 100vh;
+    height: 90vh;
+    max-height: 90vh;
     width: 100%;
+    overflow  : hidden;
 }
 main {
     width: 80%;
@@ -36,5 +38,9 @@ main {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.aside {
+    height : 90%;
 }
 </style>

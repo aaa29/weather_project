@@ -30,6 +30,7 @@ export const useDom = defineStore('dom', {
     state: () => ({
         hideContent: false,
         currentSearched : null,
+        currentZoom : 1,
     }),
 
     actions: {
@@ -38,7 +39,10 @@ export const useDom = defineStore('dom', {
         },
         setCurrentSearched(name){
             this.currentSearched = name;
-        }
+        },
+        setCurrentZoom(val){
+            this.currentZoom += val;
+        },
     }
 })
 

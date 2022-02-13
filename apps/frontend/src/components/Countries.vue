@@ -28,11 +28,12 @@ const scroll_body = ref(null)
 function search() {
     console.log('search', search_ref.value)
     if (search_ref.value) {
-        let name = Object.keys(countries_ref).find((c) => c.toLowerCase().includes(search_ref.value.toLowerCase()))
+        let name = Object.keys(countries_ref).find((c) => c.toLowerCase().startsWith(search_ref.value.toLowerCase()))
         console.log('peeee', name)
         if (name) {
             // scroll to the search value
-            let scroll_value = countries_ref[name].value[0].offsetTop - scroll_body.value.offsetTop
+            console.log('height', scroll_body.value)
+            let scroll_value = countries_ref[name].value[0].offsetTop - scroll_body.value.offsetTop - scroll_body.value.clientHeight / 2.2
             scroll_body.value.scrollTo({
                 top: scroll_value,
                 behavior: 'smooth',
@@ -68,6 +69,7 @@ function set_current_country(name) {
             country.classList.add('active')
         }
         store.setCurrentRegion(null)
+        storeDom.setCurrentSearched(null)
     })
 }
 </script>

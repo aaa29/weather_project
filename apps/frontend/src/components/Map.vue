@@ -3,7 +3,7 @@ import { toRaw, ref, reactive } from 'vue'
 import { AlgerianMap } from '../assets/svgs/map'
 import { getCountry } from '../assets/svgs/world3'
 import { useCountry } from '../../composables'
-import { useMap } from '../store'
+import { useMap, useDom } from '../store'
 import { storeToRefs } from 'pinia'
 
 const props = defineProps({
@@ -20,13 +20,14 @@ const props = defineProps({
 const store = useMap()
 const { currentName, currentCountry, currentRegions, covidData, currentRegion } = storeToRefs(store)
 
+const storeDom = useDom()
+const { currentZoom } = storeToRefs(storeDom)
+
 const regions = Object.values(props.country.path).map((r) => ({ [r.id]: false }))
 
 var selected_region = null
 
 store.selectCountry(toRaw(props.country), toRaw(regions), toRaw(props.covid), 'Algeria')
-
-
 
 function change(m, val) {
     if (val > 2000) {
@@ -54,18 +55,38 @@ function action(id) {
         i += 1
     })
 }
+
+function zoom(event) {
+    console.log(event.deltaY)
+
+    let scale = storeDom.currentZoom
+    scale += event.deltaY * -0.01
+
+    // Restrict scale
+    scale = Math.min(Math.max(0.5, scale), 8)
+
+    storeDom.setCurrentZoom(scale)
+}
+
+function calc_zoom(zoom) {
+    if (zoom === 1) return zoom
+    return zoom * 0.001
+}
 </script>
 
 <template>
+    {{ currentZoom }}
     <div class="container" :key="change_regions">
-        <svg class="map" :viewBox="currentCountry.viewbox" :width="change(currentCountry.width, currentCountry.height)" :height="auto">
-            <g>
-                <a v-for="(region, i) in currentCountry.path" :key="i || currentRegions[i][region.id]" href="#" @click="action(region.id)">
-                    <path :id="region.id" :title="region.title" :d="region.d" class="land" :class="{ active: currentRegions[i][region.id], inactive: !currentRegions[i][region.id] }" />
-                    {{ region.id }}
-                </a>
-            </g>
-        </svg>
+        <div class="svg_container" @wheel="zoom">
+            <svg class="map" :viewBox="currentCountry.viewbox" :width="change(currentCountry.width, currentCountry.height)" :height="auto" :style="{ transform: 'scale(' + calc_zoom(currentZoom) + ')' }">
+                <g>
+                    <a v-for="(region, i) in currentCountry.path" :key="i || currentRegions[i][region.id]" href="#" @click="action(region.id)">
+                        <path :id="region.id" :title="region.title" :d="region.d" class="land" :class="{ active: currentRegions[i][region.id], inactive: !currentRegions[i][region.id] }" />
+                        {{ region.id }}
+                    </a>
+                </g>
+            </svg>
+        </div>
 
         <div class="info">
             <h3>Covid-19 information</h3>
@@ -91,11 +112,11 @@ function action(id) {
     align-items: center;
 }
 
-.container > .map {
-    position: abolute;
-    top: 0;
-    left: 20em;
+.container > .svg_container {
     padding: 0 10em;
+    height : 90vh;
+    width : 40%;
+    display: flex
 }
 .land {
     fill-opacity: 1;
@@ -127,7 +148,7 @@ function action(id) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right : 2rem;
+    margin-right: 2rem;
 }
 
 .info > h2 {
@@ -149,20 +170,21 @@ function action(id) {
     align-items: center;
 }
 .region > div {
-    width : 100%;
-    padding : .5rem;
-    display : flex;
-    justify-content : center;
+    width: 100%;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
 }
 
-.info > h3, .region > h3 {
-    width : 100%;
+.info > h3,
+.region > h3 {
+    width: 100%;
     font-size: 1.5rem;
     font-weight: 400;
     padding: 0.1rem;
-    background : var(--primary);
-    color : #ffffff;
-    display : flex;
+    background: var(--primary);
+    color: #ffffff;
+    display: flex;
     justify-content: center;
 }
 </style>

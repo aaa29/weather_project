@@ -5,13 +5,10 @@ import { useCovid, useCountries } from '../composables'
 
 const { loading_countries, countries } = useCountries()
 const { loading_covid, covid_infos } = useCovid()
-
-
 </script>
 
 <template>
     <div class="container" :key="loading_countries">
-    
         <aside v-if="!(loading_countries && loading_covid)">
             <Countries :countries="countries" :covid_infos="covid_infos" />
         </aside>
@@ -26,21 +23,22 @@ const { loading_covid, covid_infos } = useCovid()
 .container {
     display: flex;
     align-items: center;
-    height: 90vh;
-    max-height: 90vh;
     width: 100%;
-    overflow  : hidden;
+    height : 90vh;
+    overflow: hidden;
+    padding: 0 2rem;
 }
 main {
     width: 80%;
-    height: 60vh;
+    height : 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
-.aside {
-    height : 90%;
+aside {
+    height: 95%;
 }
 </style>

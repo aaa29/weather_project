@@ -63,10 +63,10 @@ function zoom(event) {
     scale += event.deltaY * -0.001
 
     // Restrict scale
-    scale = Math.min(Math.max(0.001, scale), 1.5)
-    console.log('scaleee ',scale)
+    scale = Math.min(Math.max(0.001, scale), 4.5)
+    console.log('scaleee ', scale)
     storeDom.setCurrentZoom(scale)
-    console.log('scaleee22 ',storeDom.currentZoom)
+    console.log('scaleee22 ', storeDom.currentZoom)
 }
 
 function calc_zoom(zoom) {
@@ -78,14 +78,16 @@ function calc_zoom(zoom) {
 <template>
     <div class="container" :key="change_regions">
         <div class="svg_container" @wheel="zoom">
-            <svg class="map" :viewBox="currentCountry.viewbox" :width="change(currentCountry.width, currentCountry.height)" :height="auto" :style="{ transform: 'scale(' + currentZoom + ')' }">
-                <g>
-                    <a v-for="(region, i) in currentCountry.path" :key="i || currentRegions[i][region.id]" href="#" @click="action(region.id)">
-                        <path :id="region.id" :title="region.title" :d="region.d" class="land" :class="{ active: currentRegions[i][region.id], inactive: !currentRegions[i][region.id] }" />
-                        {{ region.id }}
-                    </a>
-                </g>
-            </svg>
+            <div class="map" :style="{ transform: 'scale(' + currentZoom + ')' }">
+                <svg :viewBox="currentCountry.viewbox" :width="change(currentCountry.width, currentCountry.height)" :height="auto" >
+                    <g style="background: blue">
+                        <a v-for="(region, i) in currentCountry.path" :key="i || currentRegions[i][region.id]" href="#" @click="action(region.id)">
+                            <path :id="region.id" :title="region.title" :d="region.d" class="land" :class="{ active: currentRegions[i][region.id], inactive: !currentRegions[i][region.id] }" />
+                            {{ region.id }}
+                        </a>
+                    </g>
+                </svg>
+            </div>
         </div>
 
         <div class="info">
@@ -106,18 +108,30 @@ function calc_zoom(zoom) {
 <style lang="scss" scoped>
 .container {
     width: 100%;
-    position: relative;
+    height : 100%;
     background-size: contain;
     display: flex;
     align-items: center;
 }
 
 .container > .svg_container {
-  
-    height : 90vh;
-    width : 35%;
+    background: var(--light-primary);
+    height: 100%;
     display: flex;
     margin: 0 5rem;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    padding: 2px;
+}
+
+.map {
+    padding: 2px;
+    background: red;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .land {
@@ -150,7 +164,7 @@ function calc_zoom(zoom) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 5rem ;
+    margin: 0 5rem;
 }
 
 .info > h2 {

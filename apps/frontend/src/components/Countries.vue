@@ -98,10 +98,10 @@ function set_current_country(name) {
 
 <style lang="scss" scoped>
 .container_countries {
-    height: 80%;
-    width: 80mm;
+    height: 100%;
+    width: 80%;
     justify-content: flex-end;
-    margin-top: 2em;
+    margin-top: 5em;
 }
 
 .search {
@@ -152,7 +152,7 @@ function set_current_country(name) {
 }
 
 .countries {
-    height: 90vh;
+    height: 100%;
     transition: width var(--animation-duration) var(--animation-timing-curve);
     overflow-y: auto;
     display: flex;
@@ -177,6 +177,7 @@ function set_current_country(name) {
     flex-direction: column;
     align-items: center;
     width: 90%;
+    height : 80%;
     gap: 0.6em;
 }
 
